@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'todo_list/styles.css' %}" />
+    <title>New task</title>
+  </head>
+  <body class="page page--todo-list">
+    <div class="container">
+      <h1 class="page-title">Create a new task</h1>
+      <div>
+        <form method="POST">
+            {{form.as_p}}
+            {% csrf_token %}
+            <input type="submit" value="Create Task" />
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
