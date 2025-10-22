@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'todo_list/styles.css' %}">
+    <title>To-Do List</title>
+  </head>
+  <body class="page page--todo-list">
+    <div class="container">
+      <h1 class="page-title">Users</h1>
+      <table class="table table--todos">
+        <thead class="table__head">
+          <tr class="table__row">
+            <th class="table__th">ID</th>
+            <th class="table__th">FIRST NAME</th>
+            <th class="table__th">LAST NAME</th>
+            <th class="table__th">EMAIL</th>
+          </tr>
+        </thead>
+        <tbody class="table__body">
+          {% for user in users_list %}
+            <tr class="table__row">
+              <td class="table__td col-id">{{ user.id }}</td>
+              <td class="table__td col-title">{{ user.first_name }}</td>
+              <td class="table__td col-description">{{ user.last_name }}</td>
+              <td class="table__td col-description">{{ user.email }}</td>
+            </tr>
+          {% empty %}
+            <tr class="table__row">
+              <td class="table__td table-empty" colspan="4">No todos found</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

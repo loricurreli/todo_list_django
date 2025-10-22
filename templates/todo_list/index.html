@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{% static 'todo_list/styles.css' %}">
+    <title>To-Do List</title>
+  </head>
+  <body class="page page--todo-list">
+    <div class="container">
+      <h1 class="page-title">My To-Do List</h1>
+      <table class="table table--todos">
+        <thead class="table__head">
+          <tr class="table__row">
+            <th class="table__th">ID</th>
+            <th class="table__th">TITLE</th>
+            <th class="table__th">DESCRIPTION</th>
+            <th class="table__th">STATUS</th>
+          </tr>
+        </thead>
+        <tbody class="table__body">
+          {% for todo in todos_list %}
+            <tr class="table__row">
+              <td class="table__td col-id">{{ todo.id }}</td>
+              <td class="table__td col-title">{{ todo.title }}</td>
+              <td class="table__td col-description">{{ todo.description }}</td>
+              <td class="table__td col-status">
+                {% with s=todo.status|lower %}
+                  <span class="badge {% if s == 'done' or s == 'completed' %}is-done{% elif s == 'pending' or s == 'todo' %}is-pending{% elif s == 'cancelled' or s == 'canceled' %}is-cancelled{% endif %}">
+                    {{ todo.get_status_display|default:todo.status }}
+                  </span>
+                {% endwith %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr class="table__row">
+              <td class="table__td table-empty" colspan="4">No todos found</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
