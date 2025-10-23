@@ -37,10 +37,16 @@
    - Richiama `{% load static %}` se necessario per applicare il CSS.
 4. Aggiorna il file CSS solo se servono piccoli aggiustamenti (margini, spinner, ecc.).
 
-### 4. Routing coerente per la home (≈0.25h)
-1. In `first_project/urls.py` verifica che la root (`""`) punti alla view `index`.
-2. Se necessario, aggiungi un redirect dalla root a `/todos/` o sposta la view in `path("", ...)`.
-3. Controlla che la navbar usi sempre i nomi `url` per evitare percorsi hardcoded.
+### 4. Routing coerente per la home (≈0.5h)
+1. Apri `todo_list/urls.py` e verifica che esista la rotta nominata `index` (es. `path("todos/", views.index, name="index")`).
+2. In `first_project/urls.py` decidi il comportamento desiderato per l’URL radice:
+   - **Opzione A:** sostituire `path("", include("todo_list.urls"))` con un redirect esplicito alla lista (`path("", RedirectView.as_view(pattern_name="todo_list:index"), name="home")`).
+   - **Opzione B:** aggiungere in `todo_list/urls.py` una rotta vuota (`path("", views.index, name="home")`) e includerla come root.
+3. Se scegli l’opzione A, importa `from django.views.generic import RedirectView` in `first_project/urls.py`.
+4. Se scegli l’opzione B, assicurati di aggiornare la navbar per usare `{% url 'todo_list:home' %}` oppure lascia `todo_list:index` come path predefinito.
+5. Esegui `python manage.py runserver`, visita `http://127.0.0.1:8000/` e conferma che verrai portato alla lista todo (nessun errore o pagina vuota).
+6. Passa alla navbar in `templates/todo_list/base.html` e verifica che ogni link usi `{% url %}` con i nomi definiti (evita stringhe hardcoded come `/todos/`).
+7. In caso di modifiche ai nomi delle rotte, aggiorna eventuali `redirect()` nelle view (`return redirect('todo_list:index')`).
 
 ### 5. Vista e form di creazione task (≈0.5h)
 1. File: `todo_list/views.py`, `templates/todo_list/new_task.html`, `todo_list/forms.py`.

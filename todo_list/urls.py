@@ -5,7 +5,7 @@ from . import views
 app_name = 'todo_list'
 
 urlpatterns = [
-    path("todos/", views.index, name="index"),
+    path("", views.index, name="index"),
     path("register/", views.register, name="register"),
     path("users/", views.users, name="users"),
     path("new_task/", views.new_task, name="new_task"),
