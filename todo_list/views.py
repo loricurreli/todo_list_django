@@ -1,7 +1,8 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from todo_list.models import Todo, AppUser
+from django.contrib.auth.models import User
+from todo_list.models import Todo
 from todo_list.forms import FormTask, UserForm, UserProfileInfoForm
 from django.contrib import messages
 from django.urls import reverse
@@ -10,14 +11,14 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 @login_required
-def index(request):    
+def index(request):
     context = {'todos_list': Todo.objects.all().order_by('id') }
     return render(request, 'todo_list/index.html', context)
 
 
 def users(request):
-    users_list = {'users_list': AppUser.objects.all().order_by('id')}
-    return render(request, 'todo_list/users.html', context=users_list, )
+    users_list = {'users_list': User.objects.all().order_by('id')}
+    return render(request, 'todo_list/users.html', context=users_list)
 
 @login_required
 def new_task(request):
@@ -39,26 +40,26 @@ def new_task(request):
 
 def register(request):
     registered = False
-    
+
     if request.method == 'POST':
-        user_form = UserForm(data=request.POST)
-        profile_form = UserProfileInfoForm(data=request.POST)
+        user_form = UserForm(request.POST)
+        profile_form = UserProfileInfoForm(request.POST, request.FILES)
         if user_form.is_valid() and profile_form.is_valid():
-           user = user_form.save()
-           user.set_password(user.password)
-           user.save()
-           
-           profile = profile_form.save(commit=False)
-           profile.user = user
-           
-           if 'profile_pic' in request.FILES:
-               profile.profile_pic = request.FILES['profile_pic']
-            
-           profile.save()
-           
-           registered=True
+            try:
+                user = user_form.save()
+                user.set_password(user.password)
+                user.save()
+
+                profile = profile_form.save(commit=False)
+                profile.user = user
+                profile.save()
+
+                registered = True
+                messages.success(request, "Registrazione completata con successo. Puoi ora accedere.")
+            except Exception as exc:
+                messages.error(request, f"Errore durante la registrazione: {exc}")
         else:
-            print('ERROR FORM INVALID')
+            messages.error(request, "Controlla i campi evidenziati e riprova.")
     else:
         user_form = UserForm()
         profile_form = UserProfileInfoForm()

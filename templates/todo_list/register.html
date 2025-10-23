@@ -7,30 +7,65 @@
 
       {% if registered %}
         <div class="alert alert-success" role="alert">
-          <h4 class="alert-heading mb-2">Thank you for registering!</h4>
-          <p class="mb-0">Il tuo account è stato creato correttamente.</p>
+          <h4 class="alert-heading mb-2">Grazie per la registrazione!</h4>
+          <p class="mb-3">Il tuo account è stato creato correttamente.</p>
+          <a href="{% url 'todo_list:user_login' %}" class="btn btn-primary w-100">Vai al login</a>
         </div>
-        <a href="{% url 'todo_list:index' %}" class="btn btn-primary w-100">Torna alla lista</a>
-
       {% else %}
         <div class="card shadow-sm">
           <div class="card-header">
             <h1 class="h4 mb-0">Registrati qui!</h1>
           </div>
           <div class="card-body">
-            <p class="text-muted">Compila il form:</p>
+            <p class="text-muted">Compila il form con i tuoi dati.</p>
 
-            <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <form method="POST" enctype="multipart/form-data" novalidate>
               {% csrf_token %}
 
-              {{ user_form.non_field_errors }}
-              {{ profile_form.non_field_errors }}
+              {% if user_form.non_field_errors %}
+                <div class="alert alert-danger">
+                  {% for error in user_form.non_field_errors %}
+                    <div>{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
 
-              {{ user_form.as_p }}
-              {{ profile_form.as_p }}
+              {% if profile_form.non_field_errors %}
+                <div class="alert alert-danger">
+                  {% for error in profile_form.non_field_errors %}
+                    <div>{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              {% for field in user_form %}
+                <div class="mb-3">
+                  <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.help_text %}
+                    <div class="form-text">{{ field.help_text }}</div>
+                  {% endif %}
+                  {% for error in field.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+
+              {% for field in profile_form %}
+                <div class="mb-3">
+                  <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.help_text %}
+                    <div class="form-text">{{ field.help_text }}</div>
+                  {% endif %}
+                  {% for error in field.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endfor %}
 
               <button type="submit" class="btn btn-primary w-100">
-                Register
+                Registrati
               </button>
             </form>
           </div>
