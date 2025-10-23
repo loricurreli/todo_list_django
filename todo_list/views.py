@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from todo_list.models import Todo, AppUser
 from todo_list.forms import FormTask, UserFrom, UserProfileInfoForm
-
+from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
@@ -18,18 +18,23 @@ def users(request):
     users_list = {'users_list': AppUser.objects.all().order_by('id')}
     return render(request, 'todo_list/users.html', context=users_list, )
 
+@login_required
 def new_task(request):
-    form = FormTask()
-    
-    if request.method == 'POST':
+    if request.method == "POST":
         form = FormTask(request.POST)
         if form.is_valid():
-           form.save(commit=True)
-           return index(request)
+            try:
+                form.save()
+                messages.success(request, "Task creato con successo.")
+                return redirect("todo_list:index")
+            except Exception as exc:
+                messages.error(request, f"Errore durante il salvataggio: {exc}")
         else:
-            print('ERROR FORM INVALID')
-       
-    return render(request, 'todo_list/new_task.html', { 'form': form})
+            messages.error(request, "Controlla i campi del form.")
+    else:
+        form = FormTask()
+
+    return render(request, "todo_list/new_task.html", {"form": form})
 
 def register(request):
     registered = False

@@ -6,7 +6,12 @@ from todo_list.models import UserProfileInfo
 class FormTask(forms.ModelForm):
     class Meta:
         model = Todo
-        fields = '__all__'
+        fields = ('title', 'description', 'status')
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'status': forms.Select(attrs={'class': 'form-select'}),
+        }
 
 class UserFrom(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
