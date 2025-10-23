@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 
+
 # Create your views here.
 @login_required
 def index(request):
@@ -44,10 +45,12 @@ def register(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
         profile_form = UserProfileInfoForm(request.POST, request.FILES)
+
         if user_form.is_valid() and profile_form.is_valid():
             try:
-                user = user_form.save()
-                user.set_password(user.password)
+                user = user_form.save(commit=False)
+                raw_password = user_form.cleaned_data['password']
+                user.set_password(raw_password)
                 user.save()
 
                 profile = profile_form.save(commit=False)
@@ -55,7 +58,8 @@ def register(request):
                 profile.save()
 
                 registered = True
-                messages.success(request, "Registrazione completata con successo. Puoi ora accedere.")
+                messages.success(request, "Registrazione completata. Effettua il login.")
+                return redirect('todo_list:user_login')
             except Exception as exc:
                 messages.error(request, f"Errore durante la registrazione: {exc}")
         else:
@@ -63,33 +67,33 @@ def register(request):
     else:
         user_form = UserForm()
         profile_form = UserProfileInfoForm()
-        
-    return render(request, 'todo_list/register.html', {'user_form': user_form, 'registered': registered, 'profile_form': profile_form})
+
+    return render(
+        request,
+        'todo_list/register.html',
+        {'user_form': user_form, 'profile_form': profile_form, 'registered': registered}
+    )
+
         
        
 def user_login(request):
-    
     if request.method == 'POST':
-        username = request.post.get("username")
-        password = request.post.get("password")
-        
-        user = authenticate(username=username, password=password)
-        
-        if user:
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "")
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect(reverse("index"))
-            
-            else:
-                return HttpResponse("ACCOUNT NOT ACTIVE")
-        
+                next_url = request.GET.get("next") or reverse("todo_list:index")
+                return redirect(next_url)
+            messages.error(request, "Account non attivo. Contatta l'amministratore.")
         else:
-            print("Someone tried to login and failed!")
-            print("Username: {} and password {}".format(username=username, password=password))
-    
-    else: 
-        return render(request, 'todo_list/login.html')
-    
+            messages.error(request, "Credenziali non valide. Riprova.")
+
+    return render(request, 'todo_list/login.html')
+
 def user_logout(request):
     # logout(request)
     return render(request, 'todo_list/logout.html')
