@@ -4,14 +4,14 @@ from todo_list.models import Todo, User
 from todo_list.forms import FormTask
 
 # Create your views here.
-def index(request):
-    todos_list = {'todos_list': Todo.objects.all().order_by('id')}
-    return render(request, 'todo_list/index.html', context=todos_list)
+def index(request):    
+    context_dict = {'text': 'hello world', 'number': 100, 'todos_list': Todo.objects.all().order_by('id') }
+    return render(request, 'todo_list/index.html', context_dict)
 
 
 def users(request):
     users_list = {'users_list': User.objects.all().order_by('id')}
-    return render(request, 'todo_list/users.html', context=users_list)
+    return render(request, 'todo_list/users.html', context=users_list, )
 
 def new_task(request):
     form = FormTask()
