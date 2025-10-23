@@ -10,8 +10,8 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):    
-    context_dict = {'text': 'hello world', 'number': 100, 'todos_list': Todo.objects.all().order_by('id') }
-    return render(request, 'todo_list/index.html', context_dict)
+    context = {'todos_list': Todo.objects.all().order_by('id') }
+    return render(request, 'todo_list/index.html', context)
 
 
 def users(request):
