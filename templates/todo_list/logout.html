@@ -1,10 +1,17 @@
 {% extends "todo_list/base.html" %}
 {% block title %}Logout{% endblock %}
 {% block body_block %}
-
-<div class="container">
-    <h1>Logout page</h1>
-</div>
-
-{% endblock body_block %}
-
+  <div class="py-5">
+    <div class="col-12 col-md-8 col-lg-5 mx-auto">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h1 class="h4 mb-3">Sei uscito dall'account</h1>
+          <p class="text-muted mb-4">
+            La tua sessione è stata terminata correttamente. Puoi accedere di nuovo quando vuoi.
+          </p>
+          <a class="btn btn-primary" href="{% url 'todo_list:user_login' %}">Torna al login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

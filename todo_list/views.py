@@ -16,7 +16,7 @@ def index(request):
     context = {'todos_list': Todo.objects.all().order_by('id') }
     return render(request, 'todo_list/index.html', context)
 
-
+@login_required
 def users(request):
     users_list = {'users_list': User.objects.all().order_by('id')}
     return render(request, 'todo_list/users.html', context=users_list)
@@ -94,8 +94,10 @@ def user_login(request):
 
     return render(request, 'todo_list/login.html')
 
+@login_required
 def user_logout(request):
-    # logout(request)
+    logout(request)
+    messages.info(request, "Sei stato disconnesso correttamente.")
     return render(request, 'todo_list/logout.html')
 
 @login_required
