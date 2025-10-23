@@ -12,10 +12,10 @@ class Todo(models.Model):
     description = models.CharField(max_length=250)
     
     
-# class User(models.Model):
-#     first_name = models.CharField(max_length=30)
-#     last_name = models.CharField(max_length=30)
-#     email = models.EmailField()
+class AppUser(models.Model):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    email = models.EmailField()
     
 
 class UserProfileInfo(models.Model):

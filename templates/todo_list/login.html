@@ -1,19 +1,26 @@
 {% extends "todo_list/base.html" %}
+
+{% block title %}Login{% endblock %}
+
 {% block body_block %}
-
 <div class="container">
-    <h1>Please Login</h1>
-    <form action="{% url 'todo_list:user_login' %}" method="POST">
-        {% csrf_token %}
-        <label for="username">Username: </label>
-        <input type="text" name="username" placeholder="Enter Username" />
+  <h1>Please Login</h1>
 
-        <label for="password">Password: </label>
-        <input type="password" name="password" />
+  {% if form_errors %}
+    <div class="alert alert-danger">
+      {{ form_errors }}
+    </div>
+  {% endif %}
 
-        <input type="submit" name="" value="Login" />
-    </form>
+  <form action="{% url 'todo_list:user_login' %}" method="POST" novalidate>
+    {% csrf_token %}
+    <label for="username">Username:</label>
+    <input type="text" name="username" placeholder="Enter Username" required />
+
+    <label for="password">Password:</label>
+    <input type="password" name="password" required />
+
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
 </div>
-
-{% endblock body_block %}
-
+{% endblock %}

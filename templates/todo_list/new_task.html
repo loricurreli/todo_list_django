@@ -1,21 +1,20 @@
-<!DOCTYPE html>
+{% extends 'todo_list/base.html' %}
+
 {% load static %}
-<html lang="en" class="no-js">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="{% static 'todo_list/styles.css' %}" />
-    <title>New task</title>
-  </head>
-  <body class="page page--todo-list">
-    <div class="container">
-      <h1 class="page-title">Create a new task</h1>
-      <div>
-        <form method="POST">
-            {{form.as_p}}
-            {% csrf_token %}
-            <input type="submit" value="Create Task" />
-        </form>
-      </div>
+
+{% block title %}
+  New task
+{% endblock %}
+
+{% block body_block %}
+  <div class="container">
+    <h1 class="page-title">Create a new task</h1>
+    <div>
+      <form method="POST">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="submit" value="Create Task" />
+      </form>
     </div>
-  </body>
-</html>
+  </div>
+{% endblock %}

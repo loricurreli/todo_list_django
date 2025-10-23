@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from todo_list.models import Todo
+from todo_list.models import Todo, AppUser
 from todo_list.forms import FormTask, UserFrom, UserProfileInfoForm
 
 from django.urls import reverse
@@ -14,9 +14,9 @@ def index(request):
     return render(request, 'todo_list/index.html', context_dict)
 
 
-# def users(request):
-#     users_list = {'users_list': User.objects.all().order_by('id')}
-#     return render(request, 'todo_list/users.html', context=users_list, )
+def users(request):
+    users_list = {'users_list': AppUser.objects.all().order_by('id')}
+    return render(request, 'todo_list/users.html', context=users_list, )
 
 def new_task(request):
     form = FormTask()
@@ -84,8 +84,8 @@ def user_login(request):
         return render(request, 'todo_list/login.html')
     
 def user_logout(request):
-    logout(request)
-    return HttpResponseRedirect(reverse('index'))
+    # logout(request)
+    return render(request, 'todo_list/logout.html')
 
 @login_required
 def special(request):
