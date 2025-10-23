@@ -10,6 +10,9 @@ class Todo(models.Model):
     status = models.CharField(max_length=30, choices=TASK_STATUS, default='PENDING')
     title = models.CharField(max_length=30)
     description = models.CharField(max_length=250)
+
+    def __str__(self):
+        return f"{self.title} ({self.get_status_display()})"
     
     
 class UserProfileInfo(models.Model):
