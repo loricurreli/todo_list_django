@@ -13,7 +13,7 @@ class FormTask(forms.ModelForm):
             'status': forms.Select(attrs={'class': 'form-select'}),
         }
 
-class UserFrom(forms.ModelForm):
+class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
     
     class Meta():

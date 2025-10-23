@@ -3,24 +3,39 @@
 {% block title %}Login{% endblock %}
 
 {% block body_block %}
-<div class="container">
-  <h1>Please Login</h1>
+  <div class="py-4">
+    <div class="col-12 col-md-8 col-lg-5 mx-auto">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <h1 class="h4 mb-0">Please Login</h1>
+        </div>
+        <div class="card-body">
+          {% if form_errors %}
+            <div class="alert alert-danger">{{ form_errors }}</div>
+          {% endif %}
+          <form action="{% url 'todo_list:user_login' %}" method="POST" novalidate>
+            {% csrf_token %}
 
-  {% if form_errors %}
-    <div class="alert alert-danger">
-      {{ form_errors }}
+            <div class="mb-3">
+              <label class="form-label" for="id_username">Username</label>
+              <input type="text" name="username" id="id_username" class="form-control" placeholder="Enter username" required />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="id_password">Password</label>
+              <input type="password" name="password" id="id_password" class="form-control" placeholder="Enter password" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+          </form>
+        </div>
+        <div class="card-footer text-center">
+          <small class="text-muted">
+            Non hai ancora un account?
+            <a href="{% url 'todo_list:register' %}">Registrati</a>
+          </small>
+        </div>
+      </div>
     </div>
-  {% endif %}
-
-  <form action="{% url 'todo_list:user_login' %}" method="POST" novalidate>
-    {% csrf_token %}
-    <label for="username">Username:</label>
-    <input type="text" name="username" placeholder="Enter Username" required />
-
-    <label for="password">Password:</label>
-    <input type="password" name="password" required />
-
-    <button type="submit" class="btn btn-primary">Login</button>
-  </form>
-</div>
+  </div>
 {% endblock %}

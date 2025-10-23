@@ -2,13 +2,14 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from todo_list.models import Todo, AppUser
-from todo_list.forms import FormTask, UserFrom, UserProfileInfoForm
+from todo_list.forms import FormTask, UserForm, UserProfileInfoForm
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@login_required
 def index(request):    
     context = {'todos_list': Todo.objects.all().order_by('id') }
     return render(request, 'todo_list/index.html', context)
@@ -40,7 +41,7 @@ def register(request):
     registered = False
     
     if request.method == 'POST':
-        user_form = UserFrom(data=request.POST)
+        user_form = UserForm(data=request.POST)
         profile_form = UserProfileInfoForm(data=request.POST)
         if user_form.is_valid() and profile_form.is_valid():
            user = user_form.save()
@@ -59,7 +60,7 @@ def register(request):
         else:
             print('ERROR FORM INVALID')
     else:
-        user_form = UserFrom()
+        user_form = UserForm()
         profile_form = UserProfileInfoForm()
         
     return render(request, 'todo_list/register.html', {'user_form': user_form, 'registered': registered, 'profile_form': profile_form})
